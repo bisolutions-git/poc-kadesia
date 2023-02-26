@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <report
+            id="customer_balance_pdf"
+            model="wizard.customer.balance.report"
+            string="Customer Balance Report"
+            report_type="qweb-pdf"
+            name="bi_daily_customer_balance.report_customer_balance_pdf"
+            file="Customer Balance"
+        />
+        <report
+            id="customer_balance_xlsx"
+            model="wizard.customer.balance.report"
+            string="Customer Balance Report"
+            report_type="xlsx"
+            name="bi_daily_customer_balance.report_customer_balance_excel"
+            file="Customer Balance"
+        />
+    </data>
+</odoo>

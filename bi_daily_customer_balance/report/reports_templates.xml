@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="report_customer_balance_pdf">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <t t-foreach="docs" t-as="o">
+                        <t t-foreach="o.currency_ids" t-as="currency">
+                            <t t-if="True">
+                                <div class="page" style="page-break-before: always;">
+                                <t t-if="True">
+                                    <t t-set="total_sales" t-value="0"/>
+                                    <t t-set="total_payments" t-value="0"/>
+                                    <t t-set="total_start_balance" t-value="0"/>
+                                    <t t-set="total_end_balance" t-value="0"/>
+                                    <t t-set="total_checks" t-value="0"/>
+                                </t>
+
+
+                                <t t-if="o.show_section">
+                                    <t t-foreach="o.get_sections(currency)" t-as="section">
+                                        <div style="page-break-inside: avoid;">
+                                            <div class="row" style="padding-bottom: 5px;">
+                                                <div class="col-2">
+                                                    <h5>Limit</h5>
+                                                </div>
+                                                <div class="col-2">
+                                                    <h5>
+                                                        <t t-esc="section['customer'].credit_limit"/>
+                                                    </h5>
+                                                </div>
+                                                <div class="col-5">
+                                                    <h5>
+                                                        <t t-esc="section['customer'].name"/>
+                                                    </h5>
+                                                </div>
+                                                <div class="col-3">
+                                                    <h5 class="text-right">
+                                                        <t t-esc="section['currency']"/>
+                                                    </h5>
+                                                </div>
+                                            </div>
+                                            <table class="table table-sm o_main_table">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center" style="width:90px !important;">Date</th>
+                                                        <th class="text-center" style="width:100px !important;">Reference
+                                                        </th>
+                                                        <th class="text-center" style="width:100px !important;">Start
+                                                            Balance
+                                                        </th>
+                                                        <th class="text-center" style="width:100px !important;">Sales</th>
+                                                        <th class="text-center" style="width:100px !important;">Payment</th>
+                                                        <th class="text-center" style="width:100px !important;">End
+                                                            Balance
+                                                        </th>
+                                                        <th class="text-center" style="width:100px !important;">UC</th>
+                                                        <th class="text-center" style="width:100px !important;">Child Name</th>
+                                                        <th class="text-center" style="width:100px !important;">Company</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="sale_tbody">
+                                                    <t t-if="True">
+                                                        <t t-set="sales" t-value="0"/>
+                                                        <t t-set="payments" t-value="0"/>
+                                                        <t t-set="start_balance" t-value="0"/>
+                                                        <t t-set="end_balance" t-value="0"/>
+                                                        <t t-set="checks" t-value="0"/>
+                                                        <t t-set="index" t-value="0"/>
+                                                    </t>
+                                                    <t t-foreach="section['data']" t-as="line">
+
+                                                        <t t-if="line['show']">
+                                                            <t t-if="True">
+                                                                <t t-if="index == 0">
+                                                                    <t t-set="start_balance" t-value="line['start_balance']"/>
+                                                                    <t t-set="index" t-value="1"/>
+                                                                </t>
+                                                                <t t-set="end_balance" t-value="line['balance']"/>
+                                                                <t t-if="line['type'] == 'pick'">
+                                                                    <t t-set="sales" t-value="sales + line['amount']"/>
+                                                                </t>
+                                                                <t t-if="line['type'] == 'payment'">
+                                                                    <t t-set="payments" t-value="payments + line['amount']"/>
+                                                                </t>
+                                                            </t>
+                                                            <tr t-att-class="'font-weight-bold'"
+                                                                style="font-size:13px !important;">
+                                                                <td class="text-center">
+                                                                    <t t-esc="line['date']"/>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <t t-esc="line['reference']"/>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <t t-esc="'{0:,.2f}'.format(line['start_balance'])"/>
+                                                                </td>
+                                                                <t t-if="line['type'] == 'pick'">
+                                                                    <td class="text-center">
+                                                                        <t t-esc="'{0:,.2f}'.format(line['amount'])"/>
+                                                                    </td>
+                                                                    <td class="text-center">--</td>
+                                                                </t>
+                                                                <t t-if="line['type'] == 'payment'">
+                                                                    <td class="text-center">--</td>
+                                                                    <td class="text-center">
+                                                                        <t t-esc="'{0:,.2f}'.format(line['amount'])"/>
+                                                                    </td>
+                                                                </t>
+                                                                <td class="text-center">
+                                                                    <t t-esc="'{0:,.2f}'.format(line['balance'])"/>
+                                                                </td>
+                                                                <td class="text-center">--</td>
+                                                                <t t-if="line['child_name'] == ''">
+                                                                    <td class="text-center">--</td>
+                                                                </t>
+                                                                <t t-if="line['child_name'] != ''">
+                                                                    <td class="text-center">
+                                                                        <t t-esc="line['child_name']"/>
+                                                                    </td>
+                                                                </t>
+                                                                <td class="text-center">
+                                                                    <t t-esc="line['company']"/>
+                                                                </td>
+                                                            </tr>
+                                                        </t>
+                                                    </t>
+
+                                                    <!-- Total values in main table   -->
+                                                    <t t-if="True">
+                                                        <t t-set="total_sales" t-value="total_sales + sales"/>
+                                                        <t t-set="total_payments" t-value="total_payments + payments"/>
+                                                        <t t-set="total_start_balance"
+                                                           t-value="start_balance"/>
+                                                        <t t-set="total_end_balance"
+                                                           t-value="total_end_balance + end_balance"/>
+                                                        <t t-set="checks"
+                                                           t-value="o.get_uncollected_checks(section['customer'], currency)"/>
+                                                        <t t-set="total_checks" t-value="total_checks + checks"/>
+                                                        <tr t-att-class="'font-weight-bold'"
+                                                            style="font-size:13px !important;">
+                                                            <td class="text-center">--</td>
+                                                            <td class="text-center">--</td>
+                                                            <td class="text-center">
+                                                                <t t-esc="'{0:,.2f}'.format(start_balance)"/>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <t t-esc="'{0:,.2f}'.format(sales)"/>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <t t-esc="'{0:,.2f}'.format(payments)"/>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <t t-esc="'{0:,.2f}'.format(end_balance)"/>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <t t-esc="'{0:,.2f}'.format(checks)"/>
+                                                            </td>
+                                                            <td class="text-center">--</td>
+                                                        </tr>
+                                                    </t>
+
+                                                </tbody>
+                                            </table>
+                                            <div class="row" style="padding-bottom: 10px;"/>
+                                        </div>
+                                    </t>
+                                    <!-- Total values in sepereate line -->
+                                    <t t-if="True">
+                                        <div style="page-break-inside: avoid;">
+                                            <div class="row" style="">
+                                                <div class="col-10">
+                                                    <h5 class="text-center">Total</h5>
+                                                </div>
+                                                <div class="col-2">
+                                                    <h5 class="text-right">
+                                                        <t t-esc="currency.name"/>
+                                                    </h5>
+                                                </div>
+                                            </div>
+                                            <table class="table table-sm o_main_table">
+                                                <thead>
+                                                    <tr>
+                                                
+                                                        <th class="text-center" style="width:100px !important;">Start
+                                                            Balance
+                                                        </th>
+                                                        <th class="text-center" style="width:100px !important;">Sales</th>
+                                                        <th class="text-center" style="width:100px !important;">Payment</th>
+                                                        <th class="text-center" style="width:100px !important;">End
+                                                            Balance
+                                                        </th>
+                                                        <th class="text-center" style="width:100px !important;">UC</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="sale_tbody">
+                                                    <tr t-att-class="'font-weight-bold'" style="font-size:13px !important;">
+    
+                                                        <td class="text-center">
+                                                            <t t-esc="'{0:,.2f}'.format(total_start_balance)"/>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <t t-esc="'{0:,.2f}'.format(total_sales)"/>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <t t-esc="'{0:,.2f}'.format(total_payments)"/>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <t t-esc="'{0:,.2f}'.format(total_end_balance)"/>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <t t-esc="'{0:,.2f}'.format(total_checks)"/>
+                                                        </td>
+                                                        
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </t>
+                                </t>
+
+
+
+
+                                <t t-if="not o.show_section">
+                                    <div class="row" style="padding-bottom: 5px;">
+                                        <div class="col-2"><h5><t t-esc="currency.name"/></h5></div>
+                                    </div>
+
+                                    <table class="table table-sm o_main_table">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center" style="width:100px !important;">Customer</th>
+                                                <th class="text-center" style="width:90px  !important;">Date</th>
+                                                <th class="text-center" style="width:100px !important;">Reference</th>
+                                                <th class="text-center" style="width:100px !important;">Start Balance</th>
+                                                <th class="text-center" style="width:100px !important;">Sales</th>
+                                                <th class="text-center" style="width:100px !important;">Payment</th>
+                                                <th class="text-center" style="width:100px !important;">End Balance</th>
+                                                <th class="text-center" style="width:100px !important;">UC</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="sale_tbody">
+                                            <t t-foreach="o.get_sections(currency)" t-as="section">
+                                                <t t-if="True">
+                                                    <t t-set="sales" t-value="0"/>
+                                                    <t t-set="payments" t-value="0"/>
+                                                    <t t-set="start_balance" t-value="0"/>
+                                                    <t t-set="end_balance" t-value="0"/>
+                                                    <t t-set="checks" t-value="0"/>
+                                                    <t t-set="index" t-value="0"/>
+                                                </t>
+                                                <t t-foreach="section['data']" t-as="line">
+                                                    <t t-if="index == 0">
+                                                        <t t-set="start_balance" t-value="line['start_balance']"/>
+                                                        <t t-set="index" t-value="1"/>
+                                                    </t>
+                                                    <t t-set="end_balance" t-value="line['balance']"/>
+                                                    <t t-if="line['type'] == 'pick'">
+                                                        <t t-set="sales" t-value="sales + line['amount']"/>
+                                                    </t>
+                                                    <t t-if="line['type'] == 'payment'">
+                                                        <t t-set="payments" t-value="payments + line['amount']"/>
+                                                    </t>
+                                                </t>
+                                                <t t-if="True">
+                                                    <t t-set="total_sales" t-value="total_sales + sales"/>
+                                                    <t t-set="total_payments" t-value="total_payments + payments"/>
+                                                    <t t-set="total_start_balance" t-value="total_start_balance + start_balance"/>
+                                                    <t t-set="total_end_balance" t-value="total_end_balance + end_balance"/>
+                                                    <t t-set="checks" t-value="o.get_uncollected_checks(section['customer'], currency)"/>
+                                                    <t t-set="total_checks" t-value="total_checks + checks"/>
+                                                    <tr t-att-class="'font-weight-bold'" style="font-size:13px !important; border-bottom: 1px solid black;">
+                                                        <td class="text-center" style="vertical-align: middle !important;"><t t-esc="section['customer'].name"/></td>
+                                                        <td class="text-center" style="vertical-align: middle !important;"><t t-esc="datetime.datetime.strftime(o.end_date, '%Y-%m-%d')"/></td>
+                                                        <td class="text-center" style="vertical-align: middle !important;">--</td>
+                                                        <td class="text-center" style="vertical-align: middle !important;"><t t-esc="'{0:,.2f}'.format(start_balance)"/></td>
+                                                        <td class="text-center" style="vertical-align: middle !important;"><t t-esc="'{0:,.2f}'.format(sales)"/></td>
+                                                        <td class="text-center" style="vertical-align: middle !important;"><t t-esc="'{0:,.2f}'.format(payments)"/></td>
+                                                        <td class="text-center" style="vertical-align: middle !important;"><t t-esc="'{0:,.2f}'.format(end_balance)"/></td>
+                                                        <td class="text-center" style="vertical-align: middle !important;"><t t-esc="'{0:,.2f}'.format(checks)"/></td>
+                                                    </tr>
+                                                </t>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                    <t t-if="True">
+                                        <div style="page-break-inside: avoid;">
+                                            <div class="row" style="">
+                                                <div class="col-12">
+                                                    <h5 class="text-center">Total</h5>
+                                                </div>
+                                            </div>
+                                            <table class="table table-sm o_main_table">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center" style="width:100px !important;">Customer</th>
+                                                        <th class="text-center" style="width:90px !important;">Date</th>
+                                                        <th class="text-center" style="width:100px !important;">Reference
+                                                        </th>
+                                                        <th class="text-center" style="width:100px !important;">Start
+                                                            Balance
+                                                        </th>
+                                                        <th class="text-center" style="width:100px !important;">Sales</th>
+                                                        <th class="text-center" style="width:100px !important;">Payment</th>
+                                                        <th class="text-center" style="width:100px !important;">End
+                                                            Balance
+                                                        </th>
+                                                        <th class="text-center" style="width:100px !important;">UC</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="sale_tbody">
+                                                    <tr t-att-class="'font-weight-bold'" style="font-size:13px !important;">
+                                                        <td class="text-center">--</td>
+                                                        <td class="text-center">--</td>
+                                                        <td class="text-center">--</td>
+                                                        <td class="text-center">
+                                                            <t t-esc="'{0:,.2f}'.format(total_start_balance)"/>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <t t-esc="'{0:,.2f}'.format(total_sales)"/>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <t t-esc="'{0:,.2f}'.format(total_payments)"/>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <t t-esc="'{0:,.2f}'.format(total_end_balance)"/>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <t t-esc="'{0:,.2f}'.format(total_checks)"/>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </t>
+                                </t>
+
+                            </div>
+                            </t>
+                           
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

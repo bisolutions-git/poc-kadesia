@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model='ir.actions.act_window' id='wizard_act'>
+        <field name="name">Customer Balance Report</field>
+        <field name="res_model">wizard.customer.balance.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="wizard_form"/>
+        <field name="target">new</field>
+    </record>
+    <menuitem name="Customer Balance" parent="account_reports.account_reports_partners_reports_menu"
+              id="export_customer_balance" action="wizard_act" sequence="10"/>
+</odoo>
