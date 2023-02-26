@@ -83,7 +83,7 @@ class MRPProduction(models.Model):
                     'debit': total,
                 }))
                 move_id = self.env['account.move'].sudo().create({
-                    'type': 'entry',
+                    'move_type': 'entry',
                     'mrp_id': rec.id,
                     'ref': rec.display_name,
                     'line_ids': move_lines,
