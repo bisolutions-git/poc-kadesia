@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="mrp_production_view_form_inherit" model="ir.ui.view">
+            <field name="name">mrp.production.form.view.inherit</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button type="object" string="Journal Items" name="action_open_journals"
+                            class="oe_stat_button" icon="fa-pencil-square-o" groups="account.group_account_user"/>
+                </xpath>
+                <xpath expr="//notebook" position="inside">
+                    <page string="Work Centers">
+                        <field name="workcenter_ids" widget="one2many_list"/>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="mrp_workcenter_view_form_inherit" model="ir.ui.view">
+            <field name="name">mrp.workcenter.form.inherit</field>
+            <field name="model">mrp.workcenter</field>
+            <field name="inherit_id" ref="mrp.mrp_workcenter_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='costs_hour']" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                    <attribute name="force_save">1</attribute>
+                </xpath>
+                <xpath expr="//notebook" position="inside">
+                    <page string="Cost" groups="account.group_account_user">
+                        <group string="Direct Cost">
+                            <field name="direct_cost_ids" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="account_id" required="1"/>
+                                    <field name="analytic_account_id"/>
+                                    <field name="employee_id"
+                                           domain="[('department_id.display_in_work_centers', '=', True)]"/>
+                                    <field name="hour_amount" required="1"
+                                           attrs="{'readonly': [('employee_id', '!=', False)]}" sum="total"/>
+                                    <field name="percentage" required="1" readonly="1"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <group string="Indirect Cost">
+                            <field name="indirect_cost_ids" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="account_id" required="1"/>
+                                    <field name="analytic_account_id"/>
+                                    <field name="employee_id"
+                                           domain="[('department_id.display_in_work_centers', '=', True)]"/>
+                                    <field name="hour_amount" force_save="1" required="1"
+                                           attrs="{'readonly': [('employee_id', '!=', False)]}" sum="total"/>
+                                    <field name="percentage" required="1"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <group string="Manufacturing Overhead Cost">
+                            <field name="mrp_overhead_ids" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="account_id" required="1"/>
+                                    <field name="analytic_account_id"/>
+                                    <field name="hour_amount" force_save="1" required="1" sum="total"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <group name="note_group" col="6">
+                            <group colspan="4">
+                            </group>
+                            <group class="oe_subtotal_footer oe_right" colspan="2" name="hour_cost_total">
+                                <field name="total_hour_cost" widget="monetary"
+                                       options="{'currency_field': 'currency_id'}"/>
+                            </group>
+                            <div class="oe_clear"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mrp_direct_cost,access.mrp.direct.cost,model_mrp_direct_cost,,1,1,1,1
+access_mrp_indirect_cost,access.mrp.indirect.cost,model_mrp_indirect_cost,,1,1,1,1
+access_mrp_overhead,access.mrp_overhead,model_mrp_overhead,,1,1,1,1
