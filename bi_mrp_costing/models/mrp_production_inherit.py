@@ -88,7 +88,7 @@ class MRPProduction(models.Model):
                     'ref': rec.display_name,
                     'line_ids': move_lines,
                 })
-                move_id.post()
+                move_id._post()
 
     def action_open_journals(self):
         self.ensure_one()
