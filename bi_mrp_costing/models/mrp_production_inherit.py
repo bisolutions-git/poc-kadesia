@@ -72,7 +72,7 @@ class MRPProduction(models.Model):
                     move_lines.append((0, 0, {
                         'name': rec.display_name,
                         'account_id': account,
-                        'analytic_account_id': analytic_accounts[account],
+                        'analytic_distribution': {str(analytic_accounts[account]): 100},
                         'credit': accounts[account],
                         'debit': 0,
                     }))
