@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_stock_card_pdf">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2 style="text-align:center">
+                        Stock Info
+                    </h2>
+                    <div id="informations" class="row mt32 mb32">
+                        <div class="col-auto col-4 mw-100 mb-2">
+                            <strong>Report Date:</strong>
+                            <p class="m-0" t-esc="datetime.datetime.now().strftime('%Y-%m-%d %H:%M %p')"/>
+                        </div>
+                        <div class="col-auto col-4 mw-100 mb-2">
+                            <strong>Date From:</strong>
+                            <p class="m-0" t-esc="form['start_date']"/>
+                        </div>
+                        <div class="col-auto col-4 mw-100 mb-2">
+                            <strong>Date To:</strong>
+                            <p class="m-0" t-esc="form['end_date']"/>
+                        </div>
+                        <div class="col-auto col-4 mw-100 mb-2">
+                            <strong>Location:</strong>
+                            <p class="m-0" t-esc="location_name"/>
+                        </div>
+                    </div>
+                    <br/>
+                    <br/>
+                    <table class="table table-bordered">
+                        <thead class="font-weight-bold">
+                            <tr>
+                                <th>Name</th>
+                                <th>Internal Ref.</th>
+                                <th>Open Balance</th>
+                                <th>Qty In</th>
+                                <th>Qty Out</th>
+                                <th>End Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="lines" t-as="line">
+                                <tr>
+                                    <td>
+                                        <t t-esc="line[0]"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="line[7]"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="line[3]"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="line[4]"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="line[5]"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="line[6]"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+
+    </template>
+
+</odoo>
