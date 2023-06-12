@@ -113,13 +113,26 @@ class StandardReportXlsx(models.AbstractModel):
         user = self.env['res.users'].browse(self.env.uid)
         tz = pytz.timezone(user.tz if user.tz else 'UTC')
         times = pytz.utc.localize(datetime.now()).astimezone(tz)
-        sheet.merge_range('A1:D3', 'Report Date: ' + str(times.strftime("%Y-%m-%d %I:%M %p")), format1)
-        sheet.write(0, 4, 'From: ', format_left_align_left)
-        sheet.merge_range('F1:H1', data['start_date'], format_left_align_right)
-        sheet.write(1, 4, 'To: ', format_left_align_left)
-        sheet.merge_range('F2:H2', data['end_date'], format_left_align_right)
-        sheet.write(2, 4, 'Location: ', format_left_align_left)
-        sheet.merge_range('F3:H3', data['location_name'], format_left_align_right)
+        start = pytz.UTC.localize(datetime.strptime(data['start_date'], "%Y-%m-%d %H:%M:%S")).astimezone(
+            tz).replace(tzinfo=None)
+        end = pytz.UTC.localize(datetime.strptime(data['end_date'], "%Y-%m-%d %H:%M:%S")).astimezone(
+            tz).replace(tzinfo=None)
+        if data['lang'] == 'en':
+            sheet.merge_range('A1:D3', 'Report Date: ' + str(times.strftime("%Y-%m-%d %I:%M %p")), format1)
+            sheet.write(0, 4, 'From: ', format_left_align_left)
+            sheet.merge_range('F1:H1', str(start), format_left_align_right)
+            sheet.write(1, 4, 'To: ', format_left_align_left)
+            sheet.merge_range('F2:H2', str(end), format_left_align_right)
+            sheet.write(2, 4, 'Location: ', format_left_align_left)
+            sheet.merge_range('F3:H3', data['location_name'], format_left_align_right)
+        else:
+            sheet.merge_range('A1:D3', 'تاريخ التقرير: ' + str(times.strftime("%Y-%m-%d %I:%M %p")), format1)
+            sheet.write(0, 4, 'من: ', format_left_align_left)
+            sheet.merge_range('F1:H1', str(start), format_left_align_right)
+            sheet.write(1, 4, 'إلى: ', format_left_align_left)
+            sheet.merge_range('F2:H2', str(end), format_left_align_right)
+            sheet.write(2, 4, 'الموقع: ', format_left_align_left)
+            sheet.merge_range('F3:H3', data['location_name'], format_left_align_right)
 
         sheet.set_column(0, 0, 40)
         sheet.set_column(1, 1, 15)
@@ -128,17 +141,25 @@ class StandardReportXlsx(models.AbstractModel):
         sheet.set_column(4, 4, 12)
         sheet.set_column(5, 5, 15)
 
-        sheet.write(3, 0, "Name", format21)
-        sheet.write(3, 1, "Internal Ref.", format21)
-        sheet.write(3, 2, "Open Balance", format21)
-        sheet.write(3, 3, "Qty In", format21)
-        sheet.write(3, 4, "Qty Out", format21)
-        sheet.write(3, 5, "End Balance", format21)
+        if data['lang'] == 'en':
+            sheet.write(3, 0, "Name", format21)
+            sheet.write(3, 1, "Internal Ref.", format21)
+            sheet.write(3, 2, "Open Balance", format21)
+            sheet.write(3, 3, "Qty In", format21)
+            sheet.write(3, 4, "Qty Out", format21)
+            sheet.write(3, 5, "End Balance", format21)
+        else:
+            sheet.write(3, 0, "الاسم", format21)
+            sheet.write(3, 1, "المرجع الداخلي", format21)
+            sheet.write(3, 2, "الرصيد الافتتاحي", format21)
+            sheet.write(3, 3, "الوارد", format21)
+            sheet.write(3, 4, "المنصرف", format21)
+            sheet.write(3, 5, "الرصيد", format21)
 
         count = 4
         for line in lines:
             if line:
-                sheet.write(count, 0, str(line[0]), format21_unbolded)
+                sheet.write(count, 0, list(line[0].values())[0], format21_unbolded)
                 sheet.write(count, 1, line[7], format21_unbolded)
                 sheet.write(count, 2, line[3], format21_unbolded)
                 sheet.write(count, 3, line[4], format21_unbolded)

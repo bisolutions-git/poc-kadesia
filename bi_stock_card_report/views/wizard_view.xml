@@ -10,6 +10,7 @@
                         <field name="location"/>
                         <field name="start_date"/>
                         <field name="end_date"/>
+                        <field name="lang"/>
 <!--                        <field name="merge_bonus"/>-->
                     </group>
                     <footer>
