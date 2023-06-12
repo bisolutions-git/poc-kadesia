@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_move_tree_inherit" model="ir.ui.view">
+            <field name="name">view.move.tree.inherit</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_id']" position="after">
+                    <field name="analytic_account_id" optional="show"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_move_search_inherit" model="ir.ui.view">
+            <field name="name">view.move.search.inherit</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_id']" position="after">
+                    <field name="analytic_account_id"/>
+                </xpath>
+
+                <xpath expr="//group/filter[@name='by_product']" position="after">
+                    <filter string="Project" name="by_project" domain="[]"
+                            context="{'group_by': 'analytic_account_id'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_move_line_tree_inherit" model="ir.ui.view">
+            <field name="name">view.move.line.tree.inherit</field>
+            <field name="model">stock.move.line</field>
+            <field name="inherit_id" ref="stock.view_move_line_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_id']" position="after">
+                    <field name="analytic_account_id" optional="show"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="stock_move_line_view_search_inherit" model="ir.ui.view">
+            <field name="name">stock.move.line.view.search.inherit</field>
+            <field name="model">stock.move.line</field>
+            <field name="inherit_id" ref="stock.stock_move_line_view_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_id']" position="after">
+                    <field name="analytic_account_id"/>
+                </xpath>
+
+                <xpath expr="//group/filter[@name='groupby_product_id']" position="after">
+                    <filter string="Project" name="groupby_project" domain="[]"
+                            context="{'group_by': 'analytic_account_id'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_stock_move_line_detailed_operation_tree_inherit" model="ir.ui.view">
+            <field name="name">view.stock.move.line.detailed.operation.tree.inherit</field>
+            <field name="model">stock.move.line</field>
+            <field name="inherit_id" ref="stock.view_stock_move_line_detailed_operation_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_id']" position="after">
+                    <field name="analytic_account_id" optional="show"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

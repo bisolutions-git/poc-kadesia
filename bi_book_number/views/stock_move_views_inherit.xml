@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_move_tree_inherit" model="ir.ui.view">
+            <field name="name">view.move.tree.inherit</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='reference']" position="after">
+                    <field name="book_no" optional="show"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_move_search_inherit" model="ir.ui.view">
+            <field name="name">view.move.search.inherit</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="book_no"/>
+                </xpath>
+
+                <xpath expr="//group/filter[@name='by_product']" position="after">
+                    <filter string="Book No." name="by_book_no" domain="[]"
+                            context="{'group_by': 'book_no'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_move_line_tree_inherit" model="ir.ui.view">
+            <field name="name">view.move.line.tree.inherit</field>
+            <field name="model">stock.move.line</field>
+            <field name="inherit_id" ref="stock.view_move_line_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='reference']" position="after">
+                    <field name="book_no" optional="show"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="stock_move_line_view_search_inherit" model="ir.ui.view">
+            <field name="name">stock.move.line.view.search.inherit</field>
+            <field name="model">stock.move.line</field>
+            <field name="inherit_id" ref="stock.stock_move_line_view_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='reference']" position="after">
+                    <field name="book_no"/>
+                </xpath>
+
+                <xpath expr="//group/filter[@name='groupby_product_id']" position="after">
+                    <filter string="Book No." name="groupby_book_no" domain="[]"
+                            context="{'group_by': 'book_no'}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
