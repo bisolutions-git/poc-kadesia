@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="discount_sale_view_form" model="ir.ui.view">
+            <field name="name">discount.sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="before">
+                    <button string="Approve" type="object" name="action_approve"
+                            states="waiting" class="oe_highlight"
+                            groups="sales_team.group_sale_manager"/>
+                </xpath>
+                <xpath expr="//button[@name='action_cancel']"
+                       position="attributes">
+                    <attribute name="states">draft,sent,sale,waiting</attribute>
+                </xpath>
+                <xpath expr="//group/group" position="inside">
+                    <field name="discount_method" required="1"/>
+                </xpath>
+
+                <xpath expr="//field[@name='note']" position="before">
+                    <group name="discount" colspan="2">
+                        <field name="discount_type" required="1"
+                               attrs="{'invisible':[('discount_method','!=','global')]}"
+                               groups="product.group_discount_per_so_line"/>
+                        <field name="discount_rate" attrs="{'invisible':[('discount_method','!=','global')]}"
+                               groups="product.group_discount_per_so_line"/>
+                    </group>
+                </xpath>
+                <xpath expr="//field[@name='tax_totals']" position="after">
+                    <field name="amount_discount"/>
+                </xpath>
+                <!-- Roundoff the discount field -->
+                <xpath expr="//field[@name='order_line']/tree/field[@name='discount']"
+                       position="attributes">
+                    <attribute name="digits">[16, 2]</attribute>
+                    <attribute name="readonly">1</attribute>
+                    <attribute name="force_save">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='discount']" position="before">
+                    <field name="discount_type" required="1"
+                           attrs="{'column_invisible':[('parent.discount_method','!=','line')]}"/>
+                    <field name="discount_rate" attrs="{'column_invisible':[('parent.discount_method','!=','line')]}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_inherit_total_discount" model="ir.ui.view">
+            <field name="name">sale.order.line.total.discount</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page/field[@name='order_line']/tree/field[@name='price_subtotal']" position="after">
+                    <field name="total_discount" force_save="1" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

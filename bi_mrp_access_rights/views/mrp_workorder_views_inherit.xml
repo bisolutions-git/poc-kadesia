@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mrp_production_workorder_tree_editable_view_inherit" model="ir.ui.view">
+            <field name="name">mrp.production.workorder.tree.editable.view.inherit</field>
+            <field name="model">mrp.workorder</field>
+            <field name="inherit_id" ref="mrp.mrp_production_workorder_tree_editable_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='duration']" position="before">
+                    <field name="has_access_to_duration" invisible="1"/>
+                </xpath>
+
+                <xpath expr="//field[@name='duration']" position="attributes">
+                    <attribute name="attrs">
+                        {'invisible': [('production_state','=', 'draft')], 'readonly': ['|', ('has_access_to_duration', '=', False), ('is_user_working', '=', True)]}
+                    </attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
+

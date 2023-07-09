@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mrp_production_form_view_inherit" model="ir.ui.view">
+            <field name="name">mrp.production.form.view.inherit</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//label[@name='bom_label']" position="attributes">
+                    <attribute name="groups">bi_mrp_access_rights.show_bom_group</attribute>
+                </xpath>
+                <xpath expr="//div[@name='bom_div']" position="attributes">
+                    <attribute name="groups">bi_mrp_access_rights.show_bom_group</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="mrp.menu_mrp_bom_form_action" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('bi_mrp_access_rights.show_bom_group')])]"/>
+        </record>
+    </data>
+</odoo>
+
